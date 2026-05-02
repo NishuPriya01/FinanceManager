@@ -1,4 +1,5 @@
 import javax.sound.midi.SysexMessage;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -45,5 +46,48 @@ public class FinanceManager {
 
         Account acc = users.get(0).getAccounts().get(0);
         System.out.println("Balance: "+ acc.getBalance());
+    }
+
+    public void addTransaction() {
+        if(users.isEmpty() || users.get(0).getAccounts().isEmpty()){
+            System.out.println("Account not found");
+            return;
+        }
+
+        Account acc = users.get(0).getAccounts().get(0);
+
+        System.out.println("1. Income");
+        System.out.println("2. Expense");
+
+        int type = scanner.nextInt();
+
+        System.out.print("Enter amount: ");
+        double amount = scanner.nextDouble();
+
+        Transaction t;
+
+        if(type == 1){
+            t = new Income(amount);
+        } else{
+            t = new Expense(amount);
+        }
+
+        t.apply(acc);
+        acc.addTransaction(t);
+
+        System.out.println("Transaction added.");
+    }
+
+    public void viewTransactions() {
+        if (users.isEmpty() || users.get(0).getAccounts().isEmpty()) {
+            System.out.println("No account found.");
+            return;
+        }
+
+        Account acc = users.get(0).getAccounts().get(0);
+
+        for (Transaction t : acc.getTransactions()) {
+            System.out.println(t.getClass().getSimpleName() + " - " + t.amount);
+        }
     }
 }
