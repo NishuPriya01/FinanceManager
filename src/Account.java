@@ -5,12 +5,26 @@ public abstract class Account {
     protected double balance;
     protected List<Transaction> transactions = new ArrayList<>();
 
-    public void deposit(double amount){
+    public boolean deposit(double amount){
+        if(amount <= 0){
+            System.out.println("Invalid amount.");
+            return false;
+        }
         balance += amount;
+        return true;
     }
 
-    public void withdraw(double amount) {
+    public boolean withdraw(double amount) {
+        if(amount <= 0){
+            System.out.println("Invalid amount.");
+            return false;
+        }
+        if(amount > balance){
+            System.out.println("Insufficient Balance.");
+            return false;
+        }
         balance -= amount;
+        return true;
     }
 
     public double getBalance() {

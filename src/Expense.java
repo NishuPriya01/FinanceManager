@@ -4,7 +4,7 @@ public class Expense extends Transaction {
     }
 
     @Override
-    public void apply(Account acc){
-        acc.withdraw(amount);
+    public boolean apply(Account acc){
+        return acc.withdraw(amount);
     }
 }

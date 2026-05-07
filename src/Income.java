@@ -4,7 +4,7 @@ public class Income extends Transaction {
     }
 
     @Override
-    public void apply(Account acc){
-        acc.deposit(amount);
+    public boolean apply(Account acc){
+        return acc.deposit(amount);
     }
 }

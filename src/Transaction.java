@@ -5,5 +5,9 @@ public abstract class Transaction {
         this.amount = amount;
     }
 
-    public abstract void apply(Account acc);
+    public double getAmount() {
+        return amount;
+    }
+
+    public abstract boolean apply(Account acc);
 }

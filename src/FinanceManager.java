@@ -24,14 +24,20 @@ public class FinanceManager {
 
         System.out.println("1. Savings Account");
         System.out.println("2. Current Account");
+        System.out.println("3. Go back to the main menu");
 
         int choice = scanner.nextInt();
 
         Account acc;
         if(choice == 1){
             acc = new SavingsAccount();
-        } else{
+        } else if (choice == 2){
             acc = new CurrentAccount();
+        } else if (choice == 3){
+            return;
+        } else {
+            System.out.println("Invalid Input.");
+            return;
         }
 
         user.addAccount(acc);
@@ -64,6 +70,11 @@ public class FinanceManager {
         System.out.print("Enter amount: ");
         double amount = scanner.nextDouble();
 
+        if(amount <= 0){
+            System.out.println("Invalid amount.");
+            return;
+        }
+
         Transaction t;
 
         if(type == 1){
@@ -72,8 +83,11 @@ public class FinanceManager {
             t = new Expense(amount);
         }
 
-        t.apply(acc);
-        acc.addTransaction(t);
+        boolean success = t.apply(acc);
+
+        if(success){
+            acc.addTransaction(t);
+        }
 
         System.out.println("Transaction added.");
     }
@@ -86,8 +100,13 @@ public class FinanceManager {
 
         Account acc = users.get(0).getAccounts().get(0);
 
+        if(acc.getTransactions().isEmpty()){
+            System.out.println("No transactions yet.");
+            return;
+        }
+
         for (Transaction t : acc.getTransactions()) {
-            System.out.println(t.getClass().getSimpleName() + " - " + t.amount);
+            System.out.println(t.getClass().getSimpleName() + " - Rs." + t.amount);
         }
     }
 }
