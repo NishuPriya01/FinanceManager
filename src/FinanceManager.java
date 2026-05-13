@@ -8,9 +8,9 @@ public class FinanceManager {
     private Scanner scanner = new Scanner(System.in);
 
     public void createUser(){
+        scanner.nextLine();
         System.out.print("Enter user name: ");
         String name;
-        scanner.nextLine();
         name = scanner.nextLine();
 
         if(name.trim().isEmpty()){
@@ -26,7 +26,11 @@ public class FinanceManager {
             System.out.println("No user found");
             return;
         }
-         User user = users.get(0);
+        User user = selectUser();
+
+        if(user == null){
+            return;
+        }
 
         System.out.println("1. Savings Account");
         System.out.println("2. Current Account");
@@ -59,22 +63,28 @@ public class FinanceManager {
     }
 
     public void viewBalance(){
-        if(users.isEmpty() || users.get(0).getAccounts().isEmpty()){
-            System.out.println("No account found");
+        User user = selectUser();
+        if(user == null){
             return;
         }
 
-        Account acc = users.get(0).getAccounts().get(0);
+        Account acc = selectAccount(user);
+        if(acc == null){
+            return;
+        }
         System.out.println("Balance: "+ acc.getBalance());
     }
 
     public void addTransaction() {
-        if(users.isEmpty() || users.get(0).getAccounts().isEmpty()){
-            System.out.println("Account not found");
+        User user = selectUser();
+        if(user == null){
             return;
         }
 
-        Account acc = users.get(0).getAccounts().get(0);
+        Account acc = selectAccount(user);
+        if(acc == null){
+            return;
+        }
 
         System.out.println("1. Income");
         System.out.println("2. Expense");
@@ -122,12 +132,15 @@ public class FinanceManager {
     }
 
     public void viewTransactions() {
-        if (users.isEmpty() || users.get(0).getAccounts().isEmpty()) {
-            System.out.println("No account found.");
+        User user = selectUser();
+        if(user == null){
             return;
         }
 
-        Account acc = users.get(0).getAccounts().get(0);
+        Account acc = selectAccount(user);
+        if(acc == null){
+            return;
+        }
 
         if(acc.getTransactions().isEmpty()){
             System.out.println("No transactions yet.");
@@ -137,5 +150,76 @@ public class FinanceManager {
         for (Transaction t : acc.getTransactions()) {
             System.out.println(t.getClass().getSimpleName() + " - Rs." + t.getAmount());
         }
+    }
+
+    public User selectUser(){
+        if (users.isEmpty()){
+            System.out.println("No users found.");
+            return null;
+        }
+
+        System.out.println("\nSelect user:");
+
+        for(int i = 0; i < users.size(); i++){
+            System.out.println((i+1)+"."+users.get(i).getName());
+        }
+
+        System.out.println("0.Back");
+
+        int choice;
+
+        try{
+            choice = scanner.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Invalid input.");
+            scanner.nextLine();
+            return null;
+        }
+
+        if(choice == 0){
+            return null;
+        }
+
+        if (choice < 1 || choice > users.size()){
+            System.out.println("Invalid choice.");
+            return null;
+        }
+        return users.get(choice - 1);
+    }
+
+    public Account selectAccount(User user){
+        if (user.getAccounts().isEmpty()){
+            System.out.println("No account found.");
+            return null;
+        }
+
+        System.out.println("\nSelect Account:");
+
+        for(int i = 0; i < user.getAccounts().size(); i++){
+            Account acc = user.getAccounts().get(i);
+            System.out.println((i+1)+"."+acc.getClass().getSimpleName());
+        }
+        System.out.println("0.Back");
+
+        int choice;
+
+        try{
+            choice = scanner.nextInt();
+        } catch(InputMismatchException e){
+            System.out.println("Invalid input.");
+            scanner.nextLine();
+            return null;
+        }
+
+        if(choice == 0) {
+            return null;
+        }
+
+        if(choice < 1 || choice > user.getAccounts().size()){
+            System.out.println("Invalid choice. Please enter the number from the menu.");
+            return null;
+        }
+
+        return user.getAccounts().get(choice - 1);
     }
 }
