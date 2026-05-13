@@ -1,6 +1,5 @@
-import javax.sound.midi.SysexMessage;
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,7 +9,14 @@ public class FinanceManager {
 
     public void createUser(){
         System.out.print("Enter user name: ");
-        String name = scanner.next();
+        String name;
+        scanner.nextLine();
+        name = scanner.nextLine();
+
+        if(name.trim().isEmpty()){
+            System.out.println("User name cannot be empty.");
+            return;
+        }
         users.add(new User(name));
         System.out.println("User created.");
     }
@@ -26,7 +32,15 @@ public class FinanceManager {
         System.out.println("2. Current Account");
         System.out.println("3. Go back to the main menu");
 
-        int choice = scanner.nextInt();
+        int choice;
+
+        try{
+            choice = scanner.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Please enter a valid input.");
+            scanner.nextLine();
+            return;
+        }
 
         Account acc;
         if(choice == 1){
@@ -65,10 +79,26 @@ public class FinanceManager {
         System.out.println("1. Income");
         System.out.println("2. Expense");
 
-        int type = scanner.nextInt();
+        int type;
+
+        try{
+            type = scanner.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Please enter a valid input.");
+            scanner.nextLine();
+            return;
+        }
 
         System.out.print("Enter amount: ");
-        double amount = scanner.nextDouble();
+        double amount;
+
+        try{
+            amount = scanner.nextDouble();
+        } catch (InputMismatchException e){
+            System.out.println("Invalid amount.");
+            scanner.nextLine();
+            return;
+        }
 
         if(amount <= 0){
             System.out.println("Invalid amount.");
@@ -87,9 +117,8 @@ public class FinanceManager {
 
         if(success){
             acc.addTransaction(t);
+            System.out.println("Transaction added.");
         }
-
-        System.out.println("Transaction added.");
     }
 
     public void viewTransactions() {
@@ -106,7 +135,7 @@ public class FinanceManager {
         }
 
         for (Transaction t : acc.getTransactions()) {
-            System.out.println(t.getClass().getSimpleName() + " - Rs." + t.amount);
+            System.out.println(t.getClass().getSimpleName() + " - Rs." + t.getAmount());
         }
     }
 }

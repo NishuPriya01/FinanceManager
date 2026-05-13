@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Main {
     public static void main(String[] args){
@@ -13,7 +14,15 @@ public class Main {
             System.out.println("5. View Transactions");
             System.out.println("6. Exit");
 
-            int choice = scanner.nextInt();
+            int choice;
+
+            try{
+                choice = scanner.nextInt();
+            } catch (InputMismatchException e){
+                System.out.println("Please enter a valid number.");
+                scanner.nextLine();
+                continue;
+            }
 
             switch(choice){
                 case 1:
@@ -33,6 +42,9 @@ public class Main {
                     break;
                 case 6:
                     System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid input. Please choose a number from the menu.");
             }
         }
     }
