@@ -10,8 +10,7 @@ public class FinanceManager {
     public void createUser(){
         scanner.nextLine();
         System.out.print("Enter user name: ");
-        String name;
-        name = scanner.nextLine();
+        String name = readLine();
 
         if(name.trim().isEmpty()){
             System.out.println("User name cannot be empty.");
@@ -36,13 +35,8 @@ public class FinanceManager {
         System.out.println("2. Current Account");
         System.out.println("3. Go back to the main menu");
 
-        int choice;
-
-        try{
-            choice = scanner.nextInt();
-        } catch (InputMismatchException e){
-            System.out.println("Please enter a valid input.");
-            scanner.nextLine();
+        int choice = readInt();
+        if(choice == -1){
             return;
         }
 
@@ -89,24 +83,14 @@ public class FinanceManager {
         System.out.println("1. Income");
         System.out.println("2. Expense");
 
-        int type;
-
-        try{
-            type = scanner.nextInt();
-        } catch (InputMismatchException e){
-            System.out.println("Please enter a valid input.");
-            scanner.nextLine();
+        int type = readInt();
+        if(type == -1){
             return;
         }
 
         System.out.print("Enter amount: ");
-        double amount;
-
-        try{
-            amount = scanner.nextDouble();
-        } catch (InputMismatchException e){
-            System.out.println("Invalid amount.");
-            scanner.nextLine();
+        double amount = readDouble();
+        if(amount == -1){
             return;
         }
 
@@ -119,8 +103,11 @@ public class FinanceManager {
 
         if(type == 1){
             t = new Income(amount);
-        } else{
+        } else if (type == 2){
             t = new Expense(amount);
+        } else {
+            System.out.println("Invalid transaction type.");
+            return;
         }
 
         boolean success = t.apply(acc);
@@ -164,15 +151,10 @@ public class FinanceManager {
             System.out.println((i+1)+"."+users.get(i).getName());
         }
 
-        System.out.println("0.Back");
+        System.out.println("0. Back");
 
-        int choice;
-
-        try{
-            choice = scanner.nextInt();
-        } catch (InputMismatchException e){
-            System.out.println("Invalid input.");
-            scanner.nextLine();
+        int choice = readInt();
+        if(choice == -1){
             return null;
         }
 
@@ -201,13 +183,8 @@ public class FinanceManager {
         }
         System.out.println("0.Back");
 
-        int choice;
-
-        try{
-            choice = scanner.nextInt();
-        } catch(InputMismatchException e){
-            System.out.println("Invalid input.");
-            scanner.nextLine();
+        int choice = readInt();
+        if(choice == -1){
             return null;
         }
 
@@ -221,5 +198,29 @@ public class FinanceManager {
         }
 
         return user.getAccounts().get(choice - 1);
+    }
+
+    private int readInt() {
+        try{
+            return scanner.nextInt();
+        } catch (InputMismatchException e){
+            System.out.print("Please enter a valid input.");
+            scanner.nextLine();
+            return -1;
+        }
+    }
+
+    private double readDouble() {
+        try{
+            return scanner.nextDouble();
+        } catch (InputMismatchException e){
+            System.out.print("Invalid amount.");
+            scanner.nextLine();
+            return -1;
+        }
+    }
+
+    private String readLine() {
+        return scanner.nextLine();
     }
 }
